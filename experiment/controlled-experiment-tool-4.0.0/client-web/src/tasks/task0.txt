@@ -1,0 +1,9 @@
+To get familiar with the experiment tool,
+consider this a pipeline that executes
+the following steps:
+
+- Step 2
+- Step 8
+- Step 3
+- Step 10
+- Step 1

@@ -1,0 +1,31 @@
+pipeline ExperimentPipeline {
+    LocalFileReader
+        ->TextInterpreter
+        ->CSVInterpreter
+        ->DataSelector
+        ->TableInterpreterBlock
+        ->Sink;
+
+    block LocalFileReader oftype LocalFileExtractor {
+        filePath: {filePath}; //"./syntax-data1.csv";
+    }
+
+    block TextInterpreter oftype TextFileInterpreter {}
+    block CSVInterpreter oftype CSVInterpreter {}
+
+    block DataSelector oftype CellRangeSelector {
+        select: {selectSyntax}; //range A1:B5;
+    }
+
+    block TableInterpreterBlock oftype TableInterpreter {
+        header: false;
+        columns: [
+            {columns}
+        ];
+    }
+    block Sink oftype SQLiteLoader {
+        table: "data";
+        file: {outputFilePath};
+    }
+}
+

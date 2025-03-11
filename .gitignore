@@ -1,0 +1,11 @@
+**/pii/**
+.DS_Store
+__pycache__
+*.db-shm
+*.db-wal
+*.db
+!data_anon.db
+!data_anon_after_data_integrity.db
+.venv
+dfWithIndices.csv
+dfWithIndices.csv.out.sqlite

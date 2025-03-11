@@ -1,0 +1,58 @@
+pipeline RescueStationPipeline {
+  HttpDataSource
+    ->TextInterpreter
+    ->CSVFileInterpreter
+    ->ValuetypeValidator
+    ->IsPubliclyFundedColumnAdder
+    ->SQLiteSink;
+
+  block HttpDataSource oftype HttpExtractor {
+    url: 'https://geo.sv.rostock.de/download/opendata/rettungswachen/rettungswachen.csv';
+  }
+
+  block TextInterpreter oftype TextFileInterpreter {}
+
+  block CSVFileInterpreter oftype CSVInterpreter {
+    delimiter: ',';
+    enclosing: '"';
+  }
+
+  constraint GeographicCoordinateScale on decimal:
+    value >= -90 and value <= 90;
+
+  valuetype GeographicCoordinate oftype decimal {
+      constraints: [GeographicCoordinateScale];
+  }
+
+  block ValuetypeValidator oftype TableInterpreter {
+    header: true;
+    columns:[
+      'uuid' oftype text,
+      'latitude' oftype GeographicCoordinate,
+      'longitude' oftype GeographicCoordinate,
+      'bezeichnung' oftype text,
+      'traeger_bezeichnung' oftype text,
+      'traeger_art' oftype text,
+      'website' oftype text,
+    ];
+  }
+
+  transform IsPubliclyFunded {
+    from type oftype text;
+    to isPubliclyFunded oftype boolean;
+
+    isPubliclyFunded: type == 'öffentlich';
+  }
+
+  block IsPubliclyFundedColumnAdder oftype TableTransformer {
+    inputColumns: ['traeger_art'];
+    outputColumn: 'publiclyFunded';
+    
+    use: IsPubliclyFunded;
+  }
+
+  block SQLiteSink oftype SQLiteLoader {
+    table: 'rescuestations';
+    file: 'rescuestations.db';
+  }
+}

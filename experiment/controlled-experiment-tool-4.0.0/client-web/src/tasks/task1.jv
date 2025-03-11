@@ -1,0 +1,50 @@
+pipeline SchoolPipeline {
+  ZipDataSource
+    ->ZipArchiveInterpreter
+    ->SingleFilePicker
+    ->TextInterpreter
+    ->CSVFileInterpreter
+    ->ColumnTranslatorEnglish
+    ->PartialColumnsParser
+    ->SQLiteSink;
+
+  block ZipDataSource oftype HttpExtractor {
+    // Datenquelle: CC-BY-4.0 - Stadt Wuppertal - offenedaten-wuppertal.de
+    url: 'https://daten.wuppertal.de/Soziales/Schulen_EPSG25832_CSV.zip';
+  }
+
+  block ZipArchiveInterpreter oftype ArchiveInterpreter {
+    archiveType: 'zip';
+  }
+
+  block SingleFilePicker oftype FilePicker {
+    path: '/Schulen_EPSG25832_CSV.csv';
+  }
+
+  block TextInterpreter oftype TextFileInterpreter {}
+
+  block CSVFileInterpreter oftype CSVInterpreter {
+    delimiter: ';';
+  }
+
+  block ColumnTranslatorEnglish oftype CellWriter {
+    at: range A1:E1;
+    write: ['id', 'name', 'address', 'schoolType', 'runBy'];
+  }
+
+  block PartialColumnsParser oftype TableInterpreter {
+    header: true;
+    columns:[
+      'id' oftype integer,
+      'name' oftype text,
+      'address' oftype text,
+      'schoolType' oftype text,
+      'runBy' oftype text,
+    ];
+  }
+
+  block SQLiteSink oftype SQLiteLoader {
+    table: 'schools';
+    file: 'schools.db';
+  }
+}

@@ -1,0 +1,68 @@
+[
+    {
+        "id": "kny9jbmadqxa5qj",
+        "name": "events",
+        "type": "base",
+        "system": false,
+        "schema": [
+            {
+                "id": "pbv42a6j",
+                "name": "experiment",
+                "type": "text",
+                "system": false,
+                "required": true,
+                "options": {
+                    "min": null,
+                    "max": null,
+                    "pattern": ""
+                }
+            },
+            {
+                "id": "wmaety4r",
+                "name": "type",
+                "type": "text",
+                "system": false,
+                "required": true,
+                "options": {
+                    "min": null,
+                    "max": null,
+                    "pattern": ""
+                }
+            },
+            {
+                "id": "oobvjjko",
+                "name": "location",
+                "type": "json",
+                "system": false,
+                "required": true,
+                "options": {}
+            },
+            {
+                "id": "uhkoddoi",
+                "name": "context",
+                "type": "json",
+                "system": false,
+                "required": false,
+                "options": {}
+            },
+            {
+                "id": "osktrf4l",
+                "name": "time",
+                "type": "number",
+                "system": false,
+                "required": true,
+                "options": {
+                    "min": null,
+                    "max": null
+                }
+            }
+        ],
+        "indexes": [],
+        "listRule": null,
+        "viewRule": null,
+        "createRule": "",
+        "updateRule": null,
+        "deleteRule": null,
+        "options": {}
+    }
+]
